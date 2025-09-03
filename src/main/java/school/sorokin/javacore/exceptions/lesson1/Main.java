@@ -1,4 +1,4 @@
-package school.sorokin.javacore.exceptions.exceptions_lesson1;
+package school.sorokin.javacore.exceptions.lesson1;
 
 import java.util.Scanner;
 

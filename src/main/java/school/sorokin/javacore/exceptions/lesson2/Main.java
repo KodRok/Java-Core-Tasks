@@ -1,6 +1,5 @@
-package school.sorokin.javacore.exceptions.exceptions_lesson2;
+package school.sorokin.javacore.exceptions.lesson2;
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 
