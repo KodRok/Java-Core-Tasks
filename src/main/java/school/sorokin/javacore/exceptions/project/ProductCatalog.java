@@ -1,8 +1,8 @@
 package school.sorokin.javacore.exceptions.project;
 
-import school.sorokin.javacore.exceptions.project.customExceptions.ItemNotFoundException;
-import school.sorokin.javacore.exceptions.project.customExceptions.NegativeNumberException;
-import school.sorokin.javacore.exceptions.project.customExceptions.NoAvailableCopiesException;
+import school.sorokin.javacore.exceptions.project.customexceptions.ItemNotFoundException;
+import school.sorokin.javacore.exceptions.project.customexceptions.NegativeNumberException;
+import school.sorokin.javacore.exceptions.project.customexceptions.NoAvailableCopiesException;
 
 import java.util.ArrayList;
 import java.util.InputMismatchException;
@@ -10,8 +10,9 @@ import java.util.List;
 import java.util.Scanner;
 
 public class ProductCatalog {
-    private List<Product> catalog;
+    private final List<Product> catalog;
     private Scanner scanner;
+    private static final String EMTY_MSG = "Каталог пуст.";
 
     public ProductCatalog() {
         this.catalog = new ArrayList<>();
@@ -47,7 +48,7 @@ public class ProductCatalog {
                     break;
                 case 3:
                     if (catalog.isEmpty()) {
-                        System.out.println("Каталог пуст.");
+                        System.out.println(EMTY_MSG);
                         break;
                     }
                     System.out.print("Введите название продукта, который хотите взять: ");
@@ -64,7 +65,7 @@ public class ProductCatalog {
                     break;
                 case 4:
                     if (catalog.isEmpty()) {
-                        System.out.println("Каталог пуст.");
+                        System.out.println(EMTY_MSG);
                         break;
                     }
                     System.out.print("Введите название продукта, который хотите вернуть: ");
@@ -82,20 +83,20 @@ public class ProductCatalog {
         }
     }
 
-    public void getAllProducts() {
+    private void getAllProducts() {
         if (catalog.isEmpty()) {
-            System.out.println("Каталог пуст.");
+            System.out.println(EMTY_MSG);
             return;
         }
         System.out.println("Список всех продуктов:");
         catalog.forEach(System.out::println);
     }
 
-    public void addProduct() {
+    private void addProduct() {
         System.out.print("Введите название продукта: ");
-        String name = scanner.nextLine();
+        String name = scanner.nextLine().trim();
         System.out.print("Введите производителя: ");
-        String producer = scanner.nextLine();
+        String producer = scanner.nextLine().trim();
         System.out.print("Введите количество: ");
         int count;
         try {
@@ -122,7 +123,7 @@ public class ProductCatalog {
         }
     }
 
-    public void takeProduct(String name, String producer) throws ItemNotFoundException, NoAvailableCopiesException {
+    private void takeProduct(String name, String producer) throws ItemNotFoundException, NoAvailableCopiesException {
         Product product = findSameProduct(name, producer);
         if (product == null) {
             throw new ItemNotFoundException("Не найдено!");
@@ -136,7 +137,7 @@ public class ProductCatalog {
         System.out.println("Вы взяли продукт '" + name + "' производителя '" + producer + "'.");
     }
 
-    public void returnProduct(String name, String producer) {
+    private void returnProduct(String name, String producer) {
         Product product = findSameProduct(name, producer);
         if (product == null) {
             System.err.println("Такого продукта нет!");

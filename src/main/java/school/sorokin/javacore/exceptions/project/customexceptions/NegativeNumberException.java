@@ -1,4 +1,4 @@
-package school.sorokin.javacore.exceptions.project.customExceptions;
+package school.sorokin.javacore.exceptions.project.customexceptions;
 
 public class NegativeNumberException extends RuntimeException {
     public NegativeNumberException(String message) {
