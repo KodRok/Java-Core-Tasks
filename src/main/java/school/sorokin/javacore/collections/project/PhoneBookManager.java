@@ -38,7 +38,7 @@ public class PhoneBookManager {
     public Contact searchContact(String name, String phone) {
         Contact existedContact = null;
         for (Contact c : contacts) {
-            if (isExisted(c)) {
+            if (c.getName().equals(name) && c.getPhone().equals(phone)) {
                 return c;
             }
         }

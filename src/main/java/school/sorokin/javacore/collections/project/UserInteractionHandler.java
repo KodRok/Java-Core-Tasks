@@ -10,7 +10,7 @@ public class UserInteractionHandler {
     public static final String EMPTY_LIST_MSG = "Телефонная книга пуста.";
     private final Scanner scanner;
     private final PhoneBookManager phoneBookManager;
-    List<Contact> contacts;
+    private List<Contact> contacts;
 
     public UserInteractionHandler(PhoneBookManager phoneBookManager) {
         this.scanner = new Scanner(System.in);
@@ -33,28 +33,16 @@ public class UserInteractionHandler {
 
     private void handleUserChoice(String userChoiceActionNumber) {
         switch (userChoiceActionNumber) {
-            case "1":
-                getInputToAddContact();
-                break;
-            case "2":
-                getInputToDeleteContact();
-                break;
-            case "3":
-                printAllContacts();
-                break;
-            case "4":
-                getInputToSearchContact();
-                break;
-            case "5":
-                getContactsByGroup();
-                break;
-            case "0":
+            case "1" -> getInputToAddContact();
+            case "2" -> getInputToDeleteContact();
+            case "3" -> printAllContacts();
+            case "4" -> getInputToSearchContact();
+            case "5" -> getContactsByGroup();
+            case "0" -> {
                 System.out.println("До свидания!");
                 System.exit(0);
-                break;
-            default:
-                System.err.println("Нужно ввести цифру от 1 до 5. Для выхода нажмите 0.");
-                break;
+            }
+            default -> System.err.println("Нужно ввести цифру от 1 до 5. Для выхода нажмите 0.");
         }
     }
 
@@ -130,10 +118,7 @@ public class UserInteractionHandler {
 
     private boolean isPhoneBookEmpty() {
         contacts = phoneBookManager.getAllContacts();
-        if (contacts.isEmpty()) {
-            return true;
-        }
-        return false;
+        return contacts.isEmpty();
     }
 
     private void getContactsByGroup() {

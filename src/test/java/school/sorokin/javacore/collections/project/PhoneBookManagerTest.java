@@ -51,7 +51,6 @@ class PhoneBookManagerTest {
         Assertions.assertEquals(1, phoneBookManager.getAllContacts().size());
     }
 
-
     @Test
     void searchContactShouldGetExistedContact() {
         phoneBookManager.addContact(
