@@ -1,12 +1,12 @@
 package school.sorokin.javacore.testing.project;
 
 public class Order {
-    int id;
-    String productName;
-    int quantity;
-    double unitPrice;
+    private Integer id;
+    private String productName;
+    private int quantity;
+    private double unitPrice;
 
-    public Order(int id, String productName, int quantity, double unitPrice) {
+    public Order(Integer id, String productName, int quantity, double unitPrice) {
         this.id = id;
         this.productName = productName;
         this.quantity = quantity;
@@ -29,7 +29,7 @@ public class Order {
         return quantity * unitPrice;
     }
 
-    public int getId() {
+    public Integer getId() {
         return id;
     }
 }
