@@ -5,7 +5,6 @@ import school.sorokin.javacore.streamapi.project.enums.Category;
 import java.math.BigDecimal;
 import java.math.MathContext;
 import java.time.LocalDate;
-import java.time.Month;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -87,10 +86,8 @@ public class Main {
 
         //Задание 8
         BigDecimal totalSum = allOrders.stream()
-                .filter(order -> order.getOrderDate().getMonth() == Month.FEBRUARY && order.getOrderDate().getYear() == 2021)
-                .map(order -> order.getProducts().stream()
-                        .map(Product::getPrice)
-                        .reduce(BigDecimal.ZERO, BigDecimal::add))
+                .flatMap(order -> order.getProducts().stream())
+                .map(Product::getPrice)
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
         System.out.println("Общая сумма заказов, сделанных в феврале 2021: " + totalSum);
         System.out.println();
@@ -98,7 +95,7 @@ public class Main {
         //Задание 9
         List<Order> ordersByDate = allOrders.stream()
                 .filter(order -> order.getOrderDate().equals(LocalDate.of(2021, 3, 15)))
-                .collect(Collectors.toList());
+                .toList();
         if (ordersByDate.isEmpty()) {
             System.out.println("Заказов на эту дату не найдено.");
             return;
@@ -132,7 +129,7 @@ public class Main {
                 .orElse(BigDecimal.ZERO);
 
         BigDecimal booksPriceAvg = BigDecimal.ZERO;
-        if (books.size() > 0) {
+        if (!books.isEmpty()) {
             MathContext mc = new MathContext(4);
             booksPriceAvg = booksPriceSumma.divide(BigDecimal.valueOf(books.size()), mc);
         }
@@ -160,7 +157,7 @@ public class Main {
         Map<Customer, List<Order>> customerToOrdersMap = allCustomers.stream()
                 .collect(Collectors.toMap(
                         customer -> customer,
-                        customer -> customer.getOrders().stream().collect(Collectors.toList())
+                        customer -> new ArrayList<>(customer.getOrders())
                 ));
 
         customerToOrdersMap.forEach((customer, orders) -> {
