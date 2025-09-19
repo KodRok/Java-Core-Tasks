@@ -8,53 +8,46 @@ import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class DataProcessor {
+
     private final ExecutorService executorService;
-    private final AtomicInteger taskCounter = new AtomicInteger(0);
-    private final AtomicInteger activeTasks = new AtomicInteger(0);
-    private final Map<String, Integer> resultsMap = new HashMap<>();
-    private final Map<String, Future<Integer>> futureConcurrentHashMap = new ConcurrentHashMap<>();
+    private final AtomicInteger taskCounter;
+    private final AtomicInteger activeTasks;
+    private final Map<String, Integer> resultsMap;
 
     public DataProcessor(int threadPoolSize) {
         this.executorService = Executors.newFixedThreadPool(threadPoolSize);
+        this.taskCounter = new AtomicInteger(0);
+        this.activeTasks = new AtomicInteger(0);
+        this.resultsMap = new HashMap<>();
     }
 
     public void submitTask(List<Integer> numbers) {
-        final String taskName = "Задача " + taskCounter.incrementAndGet();
-
+        final String taskName = "task " + taskCounter.incrementAndGet();
         activeTasks.incrementAndGet();
 
-        System.out.printf("DataProcessor отправил %s на выполнение. Активных задач: %d%n",
+        System.out.printf("DataProcessor: Отправляю %s на выполнение. Активных задач: %d%n",
                 taskName, activeTasks.get());
-        System.out.println();
-
-        CalculateSumTask task = new CalculateSumTask(numbers, taskName);
-        Future<Integer> future = executorService.submit(task);
-
-        futureConcurrentHashMap.put(taskName, future);
 
         CompletableFuture.supplyAsync(() -> {
-            Integer result = null;
-
-            try {
-                result = future.get();
-                synchronized (resultsMap) {
-                    resultsMap.put(taskName, result);
-                }
-
-                System.out.printf("DataProcessor получил для %s результат: %d%n",
-                        taskName, result);
-                System.out.println();
-
-                return result;
-            } catch (Exception e) {
-                System.err.printf("%s завершилась с ошибкой: %s%n", taskName, e.getMessage());
-                System.out.println();
-                return result;
-            } finally {
-                activeTasks.decrementAndGet();
-                futureConcurrentHashMap.remove(taskName);
-            }
-        });
+                    try {
+                        return new CalculateSumTask(numbers, taskName).call();
+                    } catch (Exception e) {
+                        throw new CompletionException(e);
+                    }
+                }, executorService)
+                .whenComplete((result, ex) -> {
+                    activeTasks.decrementAndGet();
+                    if (ex == null) {
+                        synchronized (resultsMap) {
+                            resultsMap.put(taskName, result);
+                        }
+                        System.out.printf("DataProcessor: %s выполнена. Результат: %d%n",
+                                taskName, result);
+                    } else {
+                        System.err.printf("Завершилась %s: %s%n",
+                                taskName, ex.getMessage());
+                    }
+                });
     }
 
     public int getActiveTaskCount() {

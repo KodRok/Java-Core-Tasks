@@ -7,18 +7,17 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 
-public class Main {public static void main(String[] args) throws InterruptedException {
-    System.out.println("Если 10 потоков: ");
-    testWithThreadPool(10);
-    System.out.println();
+public class Main {
+    public static void main(String[] args) throws InterruptedException {
+        System.out.println("Если 10 потоков: ");
+        testWithThreadPool(10);
 
-    System.out.println("\nЕсли только 1 поток:");
-    testWithThreadPool(1);
-    System.out.println();
+        System.out.println("\nЕсли только 1 поток:");
+        testWithThreadPool(1);
 
-    System.out.println("\nИспользую SingleThreadExecutor:");
-    testWithSingleThread();
-}
+        System.out.println("\nИспользую SingleThreadExecutor:");
+        testWithSingleThread();
+    }
 
     private static void testWithThreadPool(int threadCount) throws InterruptedException {
         DataProcessor processor = new DataProcessor(threadCount);
@@ -36,7 +35,7 @@ public class Main {public static void main(String[] args) throws InterruptedExce
 
         System.out.println("\nПолучаю результаты:");
         for (int i = 1; i <= 100; i++) {
-            String taskName = "Задача " + i;
+            String taskName = "task " + i;
             Optional<Integer> result = processor.getTaskResult(taskName);
             System.out.println(String.format("Сумма %s: %s",
                     taskName, result.orElse(-1)));
@@ -44,7 +43,6 @@ public class Main {public static void main(String[] args) throws InterruptedExce
 
         System.out.println("\nФинальная проверка:");
         System.out.println("Количество активных задач: " + processor.getActiveTaskCount());
-
         processor.shutdown();
     }
 

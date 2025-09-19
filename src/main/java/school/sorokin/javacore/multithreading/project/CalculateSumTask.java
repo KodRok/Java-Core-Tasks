@@ -16,18 +16,13 @@ public class CalculateSumTask implements Callable<Integer> {
 
     @Override
     public Integer call() throws Exception {
-        System.out.printf("Выполняется %s в потоке: %s%n",
-                taskName, Thread.currentThread().getName());
-        System.out.println();
-
-        TimeUnit.MILLISECONDS.sleep(200);
-
+        System.out.printf("Выполняем %s в потоке %s%n", taskName, Thread. currentThread ().getName());
         int sum = 0;
         for (Integer number : numbers) {
             sum += number;
         }
-
-        System.out.printf("Сделана %s. Результат: %d%n", taskName, sum);
+        TimeUnit.MILLISECONDS.sleep(200);
+        System.out.printf("Сумма %s - %d%n", taskName, sum);
         System.out.println();
         return sum;
     }
