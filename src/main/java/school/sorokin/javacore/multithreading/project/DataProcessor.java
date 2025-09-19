@@ -10,12 +10,15 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class DataProcessor {
 
     private final ExecutorService executorService;
-    private final AtomicInteger taskCounter = new AtomicInteger(0);
-    private final AtomicInteger activeTasks = new AtomicInteger(0);
-    private final Map<String, Integer> resultsMap = new HashMap<>();
+    private final AtomicInteger taskCounter;
+    private final AtomicInteger activeTasks;
+    private final Map<String, Integer> resultsMap;
 
     public DataProcessor(int threadPoolSize) {
         this.executorService = Executors.newFixedThreadPool(threadPoolSize);
+        this.taskCounter = new AtomicInteger(0);
+        this.activeTasks = new AtomicInteger(0);
+        this.resultsMap = new HashMap<>();
     }
 
     public void submitTask(List<Integer> numbers) {
